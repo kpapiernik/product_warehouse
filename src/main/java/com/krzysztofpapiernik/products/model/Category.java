@@ -1,25 +1,26 @@
 package com.krzysztofpapiernik.products.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 
 @Entity
 @Table(name = "categories")
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
-
+public class Category extends BaseEntity{
     @Column(unique = true)
     String name;
 
     @OneToMany(mappedBy = "category")
-    private List<Product> products;
+    @Builder.Default
+    private List<Product> products = new ArrayList<>();
 
 }
