@@ -1,11 +1,13 @@
 package com.krzysztofpapiernik.products.controller.dto;
 
-public record ResponseDataDto<T>(T data, String errors) {
+import java.util.Map;
+
+public record ResponseDataDto<T>(T data, Map<String, String> errors) {
     public ResponseDataDto(T data){
         this(data, null);
     }
 
-    public ResponseDataDto(String errors){
+    public ResponseDataDto(Map<String, String> errors){
         this(null, errors);
     }
 }

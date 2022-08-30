@@ -13,6 +13,6 @@ public class ExceptionHandlerController {
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseDataDto<?> validationExceptionHandler(ValidationException err){
-        return new ResponseDataDto<>(err.getMessage());
+        return new ResponseDataDto<>(err.getErrors());
     }
 }

@@ -1,16 +1,13 @@
 package com.krzysztofpapiernik.products.dto;
 
 import com.krzysztofpapiernik.products.model.Customer;
-import com.krzysztofpapiernik.products.validation.Validator;
 import com.krzysztofpapiernik.products.validation.exception.ValidationException;
-import lombok.extern.log4j.Log4j2;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 
-@Log4j2
 public record CreateCustomerDto(String firstName, String lastName, String email, String dateOfBirth) {
 
     public void validate(){
@@ -29,7 +26,7 @@ public record CreateCustomerDto(String firstName, String lastName, String email,
         if(lastName == null){
             errors.put("lastName", "is null");
         }else if (!lastName.matches("([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+")){
-            errors.put("lastName", "contains not allowed characters or doesn't match regex");
+            errors.put("lastName", "contains not allowed characters or does not match regex");
         } else if (lastName.length() > 30) {
             errors.put("lastName", "is too long, max lenght is 30 characters");
         }
@@ -49,8 +46,7 @@ public record CreateCustomerDto(String firstName, String lastName, String email,
         }
 
         if(!errors.isEmpty()){
-            log.info(Validator.validationErrorsToMessage(errors));
-            throw new ValidationException(Validator.validationErrorsToMessage(errors));
+            throw new ValidationException(errors);
         }
 
     }
