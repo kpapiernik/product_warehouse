@@ -1,4 +1,6 @@
 package com.krzysztofpapiernik.products.dto;
 
-public record GetProductDto(Long id, String name, String producer) {
+import java.math.BigDecimal;
+
+public record GetProductDto(Long id, String name, BigDecimal price, Long categoryId, Long producerId) {
 }
