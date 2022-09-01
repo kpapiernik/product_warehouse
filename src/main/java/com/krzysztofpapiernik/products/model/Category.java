@@ -1,5 +1,6 @@
 package com.krzysztofpapiernik.products.model;
 
+import com.krzysztofpapiernik.products.dto.GetCategoryDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,9 @@ public class Category extends BaseEntity{
     @OneToMany(mappedBy = "category")
     @Builder.Default
     private List<Product> products = new ArrayList<>();
+
+    public GetCategoryDto toGetCategoryDto(){
+        return new GetCategoryDto(id, name);
+    }
 
 }
