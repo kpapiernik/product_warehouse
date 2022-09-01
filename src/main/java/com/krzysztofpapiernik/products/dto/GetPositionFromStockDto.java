@@ -1,4 +1,4 @@
 package com.krzysztofpapiernik.products.dto;
 
-public record GetPositionFromStockDto(Long id) {
+public record GetPositionFromStockDto(Long id, Long productId, Integer quantity) {
 }
