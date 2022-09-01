@@ -1,7 +1,8 @@
 package com.krzysztofpapiernik.products.controller;
 
 import com.krzysztofpapiernik.products.controller.dto.ResponseDataDto;
-import com.krzysztofpapiernik.products.validation.exception.ValidationException;
+import com.krzysztofpapiernik.products.exception.CategoryServiceException;
+import com.krzysztofpapiernik.products.exception.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,5 +15,10 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseDataDto<?> validationExceptionHandler(ValidationException err){
         return new ResponseDataDto<>(err.getErrors());
+    }
+    @ExceptionHandler(CategoryServiceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseDataDto<?> categoryServiceException(CategoryServiceException err){
+        return new ResponseDataDto<>(err.getMessage());
     }
 }
