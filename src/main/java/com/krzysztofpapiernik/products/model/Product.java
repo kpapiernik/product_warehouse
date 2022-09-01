@@ -1,5 +1,6 @@
 package com.krzysztofpapiernik.products.model;
 
+import com.krzysztofpapiernik.products.dto.GetProductDto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -28,4 +29,35 @@ public class Product extends BaseEntity {
 
     @OneToOne(mappedBy = "product")
     private Stock stock;
+
+    public Product withCategory(Category category){
+        return Product
+                .builder()
+                .id(id)
+                .name(name)
+                .price(price)
+                .category(category)
+                .producer(producer)
+                .build();
+    }
+
+    public Product withProducer(Producer producer){
+        return Product
+                .builder()
+                .id(id)
+                .name(name)
+                .price(price)
+                .category(category)
+                .producer(producer)
+                .build();
+    }
+
+    public BigDecimal totalPrice(Integer quantity){
+        return price
+                .multiply(BigDecimal.valueOf(quantity));
+    }
+
+    public GetProductDto toGetProductDto(){
+        return new GetProductDto(id, name, price, category.id, producer.id);
+    }
 }
