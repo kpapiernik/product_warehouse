@@ -1,5 +1,6 @@
 package com.krzysztofpapiernik.products.model;
 
+import com.krzysztofpapiernik.products.dto.GetPositionFromStockDto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -18,4 +19,36 @@ public class Stock extends BaseEntity{
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public Stock withProduct(Product product){
+        return Stock
+                .builder()
+                .quantity(quantity)
+                .product(product)
+                .build();
+    }
+
+    public Stock withQuantityAdded(Integer quantity){
+        return Stock
+                .builder()
+                .quantity(this.quantity + quantity)
+                .product(product)
+                .build();
+    }
+
+    public Stock withQuantitySubtracted(Integer quantity){
+        return Stock
+                .builder()
+                .quantity(this.quantity - quantity)
+                .product(product)
+                .build();
+    }
+
+    public boolean hasQuantityLessThanDemanded(Integer demand){
+        return quantity < demand;
+    }
+
+    public GetPositionFromStockDto toGetPositionFromStockDto(){
+        return new GetPositionFromStockDto(id, product.id, quantity);
+    }
 }
