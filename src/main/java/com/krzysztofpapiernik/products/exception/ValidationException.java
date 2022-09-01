@@ -1,4 +1,4 @@
-package com.krzysztofpapiernik.products.validation.exception;
+package com.krzysztofpapiernik.products.exception;
 
 import java.util.Map;
 
