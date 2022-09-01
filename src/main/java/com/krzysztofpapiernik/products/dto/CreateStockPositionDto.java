@@ -1,14 +1,13 @@
 package com.krzysztofpapiernik.products.dto;
 
 import com.krzysztofpapiernik.products.model.Stock;
-import com.krzysztofpapiernik.products.validation.Validator;
-import com.krzysztofpapiernik.products.validation.exception.ValidationException;
+import com.krzysztofpapiernik.products.exception.ValidationException;
 
 import java.util.HashMap;
 
-public record CreateStockDto(Long productId, Integer quantity) {
+public record CreateStockPositionDto(Long productId, Integer quantity) {
 
-    public void validate() {
+    public CreateStockPositionDto {
         var errors = new HashMap<String, String>();
 
         if (productId == null) {
@@ -22,7 +21,7 @@ public record CreateStockDto(Long productId, Integer quantity) {
         }
 
         if(!errors.isEmpty()){
-            throw new ValidationException(Validator.validationErrorsToMessage(errors));
+            throw new ValidationException(errors);
         }
     }
 

@@ -1,13 +1,13 @@
 package com.krzysztofpapiernik.products.dto;
 
-import com.krzysztofpapiernik.products.validation.Validator;
-import com.krzysztofpapiernik.products.validation.exception.ValidationException;
+import com.krzysztofpapiernik.products.exception.ValidationException;
+import com.krzysztofpapiernik.products.model.Producer;
 
 import java.util.HashMap;
 
 public record CreateProducerDto(String name) {
 
-    public void validate(){
+    public CreateProducerDto {
         var errors = new HashMap<String, String>();
 
         if(name == null){
@@ -19,7 +19,14 @@ public record CreateProducerDto(String name) {
         }
 
         if(!errors.isEmpty()){
-            throw new ValidationException(Validator.validationErrorsToMessage(errors));
+            throw new ValidationException(errors);
         }
+    }
+
+    public Producer toProducer(){
+        return Producer
+                .builder()
+                .name(name)
+                .build();
     }
 }

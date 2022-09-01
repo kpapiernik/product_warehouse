@@ -1,15 +1,14 @@
 package com.krzysztofpapiernik.products.dto;
 
 import com.krzysztofpapiernik.products.model.Product;
-import com.krzysztofpapiernik.products.validation.Validator;
-import com.krzysztofpapiernik.products.validation.exception.ValidationException;
+import com.krzysztofpapiernik.products.exception.ValidationException;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 
 public record CreateProductDto(String name, BigDecimal price, Long categoryId, Long producerId) {
 
-    public void validate(){
+    public CreateProductDto {
         var errors = new HashMap<String, String>();
 
         if(name == null){
@@ -33,7 +32,7 @@ public record CreateProductDto(String name, BigDecimal price, Long categoryId, L
         }
 
         if(!errors.isEmpty()){
-            throw new ValidationException(Validator.validationErrorsToMessage(errors));
+            throw new ValidationException(errors);
         }
     }
 

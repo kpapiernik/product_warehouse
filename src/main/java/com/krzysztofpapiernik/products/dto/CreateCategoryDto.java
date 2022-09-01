@@ -1,16 +1,14 @@
 package com.krzysztofpapiernik.products.dto;
 
 import com.krzysztofpapiernik.products.model.Category;
-import com.krzysztofpapiernik.products.validation.Validator;
-import com.krzysztofpapiernik.products.validation.exception.ValidationException;
+import com.krzysztofpapiernik.products.exception.ValidationException;
 
 import java.util.HashMap;
 
 public record CreateCategoryDto(String name) {
-
-    public void validate(){
+    public CreateCategoryDto{
         var errors = new HashMap<String, String>();
-        
+
         if(name == null){
             errors.put("name", "is null");
         } else if (name.isEmpty()) {
@@ -20,7 +18,7 @@ public record CreateCategoryDto(String name) {
         }
 
         if(!errors.isEmpty()){
-            throw new ValidationException(Validator.validationErrorsToMessage(errors));
+            throw new ValidationException(errors);
         }
     }
 

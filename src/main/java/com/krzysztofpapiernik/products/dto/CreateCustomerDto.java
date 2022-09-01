@@ -1,7 +1,7 @@
 package com.krzysztofpapiernik.products.dto;
 
 import com.krzysztofpapiernik.products.model.Customer;
-import com.krzysztofpapiernik.products.validation.exception.ValidationException;
+import com.krzysztofpapiernik.products.exception.ValidationException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public record CreateCustomerDto(String firstName, String lastName, String email, String dateOfBirth) {
 
-    public void validate(){
+    public CreateCustomerDto {
         var errors = new HashMap<String, String>();
 
         if(firstName == null){
@@ -21,7 +21,6 @@ public record CreateCustomerDto(String firstName, String lastName, String email,
             errors.put("firstName", "is too long, max lenght is 30 characters");
         }
 
-        //log.info(Validator.validationErrorsToMessage(errors));
 
         if(lastName == null){
             errors.put("lastName", "is null");
@@ -30,13 +29,13 @@ public record CreateCustomerDto(String firstName, String lastName, String email,
         } else if (lastName.length() > 30) {
             errors.put("lastName", "is too long, max lenght is 30 characters");
         }
-        
+
         if(email == null){
             errors.put("email", "is null");
         } else if (!email.toLowerCase().matches("([a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])")) {
             errors.put("email", "does not match required pattern");
         }
-        
+
         if(dateOfBirth == null){
             errors.put("dateOfBirth", "is null");
         } else if (isNotValidDate(dateOfBirth)) {
@@ -48,7 +47,6 @@ public record CreateCustomerDto(String firstName, String lastName, String email,
         if(!errors.isEmpty()){
             throw new ValidationException(errors);
         }
-
     }
 
     private boolean isNotValidDate(String date){
