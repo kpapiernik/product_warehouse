@@ -29,13 +29,11 @@ public class CategoryService {
     }
 
     public GetCategoryDto getCategory(Long id){
-        if(categoryRepository.findById(id).isEmpty()){
-            throw new CategoryServiceException(Map.of("id", "Category with id: %s does not exist".formatted(id)));
-        }
+
         return categoryRepository
                 .findById(id)
                 .map(Category::toGetCategoryDto)
-                .orElseThrow(() -> new CategoryServiceException(Map.of("id", "Cannot get category with id: %s".formatted(id))));
+                .orElseThrow(() -> new CategoryServiceException(Map.of("id", "Category with id: %s does not exist".formatted(id))));
     }
 
     public List<GetCategoryDto> getAll(){
@@ -44,5 +42,13 @@ public class CategoryService {
                 .stream()
                 .map(Category::toGetCategoryDto)
                 .toList();
+    }
+
+    public void deleteCategory(Long id){
+        var category = categoryRepository
+                .findById(id)
+                .orElseThrow(() -> new CategoryServiceException(Map.of("id", "Category with id: %s does not exist".formatted(id))));
+
+        categoryRepository.delete(category);
     }
 }
