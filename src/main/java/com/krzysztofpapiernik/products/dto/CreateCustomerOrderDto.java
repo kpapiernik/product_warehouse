@@ -1,6 +1,5 @@
 package com.krzysztofpapiernik.products.dto;
 
-import com.krzysztofpapiernik.products.model.Customer;
 import com.krzysztofpapiernik.products.model.CustomerOrder;
 import com.krzysztofpapiernik.products.exception.ValidationException;
 

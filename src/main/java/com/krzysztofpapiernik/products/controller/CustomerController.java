@@ -5,11 +5,13 @@ import com.krzysztofpapiernik.products.dto.CreateCustomerDto;
 import com.krzysztofpapiernik.products.dto.GetCustomerDto;
 import com.krzysztofpapiernik.products.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Log4j2
 @RestController
 @RequestMapping("/customers")
 @RequiredArgsConstructor
@@ -27,9 +29,19 @@ public class CustomerController {
         return new ResponseDataDto<>(customerService.getAll());
     }
 
-    //TODO Get specific customer
+    @GetMapping("/{customerId}")
+    public ResponseDataDto<GetCustomerDto> getCustomer(@PathVariable("customerId") Long id){
+        return new ResponseDataDto<>(customerService.getCustomerById(id));
+    }
 
-    //TODO Edit customer
+    @PutMapping("/{customerId}")
+    public ResponseDataDto<GetCustomerDto> editCustomer(@PathVariable("customerId") Long id, @RequestBody CreateCustomerDto createCustomerDto){
 
-    //TODO Delete customer
+        return new ResponseDataDto<>(customerService.editCustomer(id, createCustomerDto));
+    }
+
+    @DeleteMapping("/{customerId}")
+    public void deleteCustomer(@PathVariable("customerId") Long id){
+        customerService.deleteCustomer(id);
+    }
 }
