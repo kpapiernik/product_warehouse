@@ -58,7 +58,7 @@ public class StockService {
 
         var stock = stockRepository
                 .findByProductId(productId)
-                .orElseThrow(() -> new StockServiceException(Map.of("stock", "doesnot exist")));
+                .orElseThrow(() -> new StockServiceException(Map.of("product", "doesnot exist")));
 
         if(stock.hasQuantityLessThanDemanded(quantity)){
             throw new StockServiceException(Map.of("quantity", "product quantity is less than demanded"));
@@ -68,5 +68,18 @@ public class StockService {
                 .save(stock
                         .withQuantitySubtracted(quantity))
                 .toGetPositionFromStockDto();
+    }
+
+    public GetPositionFromStockDto getPositionFromStock(Long productId){
+
+        if(productRepository.findById(productId).isEmpty()){
+            throw new StockServiceException(Map.of("product", "does not exist"));
+        }
+
+        var stock = stockRepository
+                .findByProductId(productId)
+                .orElseThrow(() -> new StockServiceException(Map.of("product", "doesnot exist")));
+
+        return stock.toGetPositionFromStockDto();
     }
 }

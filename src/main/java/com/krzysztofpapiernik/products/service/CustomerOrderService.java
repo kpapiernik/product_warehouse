@@ -3,6 +3,7 @@ package com.krzysztofpapiernik.products.service;
 import com.krzysztofpapiernik.products.dto.CreateCustomerOrderDto;
 import com.krzysztofpapiernik.products.dto.GetCustomerOrderDto;
 import com.krzysztofpapiernik.products.exception.CustomerOrderServiceException;
+import com.krzysztofpapiernik.products.model.CustomerOrder;
 import com.krzysztofpapiernik.products.repository.CustomerOrderRepository;
 import com.krzysztofpapiernik.products.repository.CustomerRepository;
 import com.krzysztofpapiernik.products.repository.ProductRepository;
@@ -45,5 +46,13 @@ public class CustomerOrderService {
         return customerOrderRepository
                 .save(customerOrder)
                 .toGetCustomerOrderDto();
+    }
+
+    public GetCustomerOrderDto getOrder(Long id){
+
+        return customerOrderRepository
+                .findById(id)
+                .map(CustomerOrder::toGetCustomerOrderDto)
+                .orElseThrow(() -> new CustomerOrderServiceException(Map.of("order", "does not exist")));
     }
 }

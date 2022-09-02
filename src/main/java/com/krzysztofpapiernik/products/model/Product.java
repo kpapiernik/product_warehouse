@@ -18,7 +18,6 @@ public class Product extends BaseEntity {
     private String name;
     private BigDecimal price;
 
-    //TODO Spróbować przerobić na relację many to many
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
     Category category;

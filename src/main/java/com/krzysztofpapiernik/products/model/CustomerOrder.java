@@ -22,7 +22,6 @@ public class CustomerOrder extends BaseEntity{
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    //TODO Sprobować przerobić na relację many to many
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_id")
     private Product product;

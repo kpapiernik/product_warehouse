@@ -28,13 +28,11 @@ public class ProducerService {
     }
 
     public GetProducerDto getProducer(Long id){
-        if(producerRepository.findById(id).isEmpty()){
-            throw new ProducerServiceException(Map.of("id", "Producer with id: %s does not exist".formatted(id)));
-        }
+
         return producerRepository
                 .findById(id)
                 .map(Producer::toGetProducerDto)
-                .orElseThrow(() -> new ProducerServiceException(Map.of("id", "Cannot get Producer with id: %s".formatted(id))));
+                .orElseThrow(() -> new ProducerServiceException(Map.of("id", "Producer with id: %s does not exist".formatted(id))));
     }
 
     public List<GetProducerDto> getAll(){
