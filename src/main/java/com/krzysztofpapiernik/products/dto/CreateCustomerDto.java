@@ -25,7 +25,7 @@ public record CreateCustomerDto(String firstName, String lastName, String email,
         if(lastName == null){
             errors.put("lastName", "is null");
         }else if (!lastName.matches("([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+")){
-            errors.put("lastName", "contains not allowed characters or does not match regex");
+            errors.put("lastName", "contains not allowed characters or does not match required pattern");
         } else if (lastName.length() > 30) {
             errors.put("lastName", "is too long, max lenght is 30 characters");
         }
