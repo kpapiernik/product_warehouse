@@ -6,6 +6,7 @@ import com.krzysztofpapiernik.products.exception.ValidationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
+import java.util.Optional;
 
 public record CreateCustomerOrderDto(Long customerId, Long productId, Integer quantity) {
 
@@ -18,9 +19,18 @@ public record CreateCustomerOrderDto(Long customerId, Long productId, Integer qu
         if (productId == null) {
             errors.put("productId", "is null");
         }
-        if (quantity <= 0) {
-            errors.put("quantity", "must be positive number");
+
+        Optional<Integer> quantityOptional = Optional.ofNullable(quantity);
+
+        if(quantityOptional.isEmpty()) {
+            errors.put("quantity", "is null");
         }
+
+        quantityOptional.ifPresent(quantityValue -> {
+            if(quantityValue <= 0){
+                errors.put("quantity", "must be positive number");
+            }
+        });
 
         if(!errors.isEmpty()){
             throw new ValidationException(errors);
