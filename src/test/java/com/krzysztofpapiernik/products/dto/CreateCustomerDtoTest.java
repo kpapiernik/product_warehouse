@@ -35,14 +35,14 @@ class CreateCustomerDtoTest {
     @ParameterizedTest
     @MethodSource("testValuesForNames")
     void itShouldNotCreateDtoWhenFirstNameDoesNotMeetRequirements(String value) {
-        assertThatThrownBy(() -> {CreateCustomerDto result = new CreateCustomerDto(value, "test", "email@test.com", "12/03/1991");})
+        assertThatThrownBy(() -> new CreateCustomerDto(value, "test", "email@test.com", "12/03/1991"))
                 .isInstanceOf(ValidationException.class);
     }
 
     @ParameterizedTest
     @MethodSource("testValuesForNames")
     void itShouldNotCreateDtoWhenLastNameDoesNotMeetRequirements(String value) {
-        assertThatThrownBy(() -> {CreateCustomerDto result = new CreateCustomerDto("test", value, "email@test.com", "12/03/1991");})
+        assertThatThrownBy(() -> new CreateCustomerDto("test", value, "email@test.com", "12/03/1991"))
                 .isInstanceOf(ValidationException.class);
     }
 
@@ -56,7 +56,7 @@ class CreateCustomerDtoTest {
         String email = null;
         //When
         //Then
-        assertThatThrownBy(() -> {CreateCustomerDto result = new CreateCustomerDto("John", "Doe", email, "01/01/1990");})
+        assertThatThrownBy(() -> new CreateCustomerDto("John", "Doe", email, "01/01/1990"))
                 .isInstanceOf(ValidationException.class)
                 .hasFieldOrPropertyWithValue("errors", Map.of("email", "is null"));
     }
@@ -67,7 +67,7 @@ class CreateCustomerDtoTest {
         String email = "test@email";
         //When
         //Then
-        assertThatThrownBy(() -> {CreateCustomerDto result = new CreateCustomerDto("John", "Doe", email, "01/01/1990");})
+        assertThatThrownBy(() -> new CreateCustomerDto("John", "Doe", email, "01/01/1990"))
                 .isInstanceOf(ValidationException.class)
                 .hasFieldOrPropertyWithValue("errors", Map.of("email", "does not match required pattern"));
     }
@@ -78,21 +78,21 @@ class CreateCustomerDtoTest {
         String email = "";
         //When
         //Then
-        assertThatThrownBy(() -> {CreateCustomerDto result = new CreateCustomerDto("John", "Doe", email, "01/01/1990");})
+        assertThatThrownBy(() -> new CreateCustomerDto("John", "Doe", email, "01/01/1990"))
                 .isInstanceOf(ValidationException.class)
                 .hasFieldOrPropertyWithValue("errors", Map.of("email", "does not match required pattern"));
     }
 
     @Test
     void itShouldNotCreateDtoWhenDateOfBirthIsNull() {
-        assertThatThrownBy(() -> {CreateCustomerDto result = new CreateCustomerDto("John", "Doe", "test@example.com", null);})
+        assertThatThrownBy(() -> new CreateCustomerDto("John", "Doe", "test@example.com", null))
                 .isInstanceOf(ValidationException.class)
                 .hasFieldOrPropertyWithValue("errors", Map.of("dateOfBirth", "is null"));
     }
 
     @Test
     void itShouldNotCreateDtoWhenDateOfBirthDoesNotMatchPattern() {
-        assertThatThrownBy(() -> {CreateCustomerDto result = new CreateCustomerDto("John", "Doe", "test@example.com", "2000/11/30");})
+        assertThatThrownBy(() -> new CreateCustomerDto("John", "Doe", "test@example.com", "2000/11/30"))
                 .isInstanceOf(ValidationException.class)
                 .hasFieldOrPropertyWithValue("errors", Map.of("dateOfBirth", "does not match required pattern (d/MM/yyyy)"));
     }
@@ -101,7 +101,7 @@ class CreateCustomerDtoTest {
     void itShouldNotCreateDtoWhenDateOfBirthIsNotPastDate() {
         LocalDate dateFromFuture = LocalDate.now().plusYears(1);
         String dateOfBirth = dateFromFuture.format(DateTimeFormatter.ofPattern("d/MM/yyyy"));
-        assertThatThrownBy(() -> {CreateCustomerDto result = new CreateCustomerDto("John", "Doe", "test@example.com", dateOfBirth);})
+        assertThatThrownBy(() -> new CreateCustomerDto("John", "Doe", "test@example.com", dateOfBirth))
                 .isInstanceOf(ValidationException.class)
                 .hasFieldOrPropertyWithValue("errors", Map.of("dateOfBirth", "must be date from the past"));
     }
