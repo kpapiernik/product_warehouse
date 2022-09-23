@@ -24,11 +24,11 @@ import java.util.List;
 @Table(name = "customers")
 public class Customer extends BaseEntity{
 
-    private String firstName;
-    private String lastName;
+    protected String firstName;
+    protected String lastName;
     @Column(unique = true)
-    private String email;
-    private LocalDate dateOfBirth;
+    protected String email;
+    protected LocalDate dateOfBirth;
 
     @OneToMany(mappedBy = "customer")
     @Builder.Default
