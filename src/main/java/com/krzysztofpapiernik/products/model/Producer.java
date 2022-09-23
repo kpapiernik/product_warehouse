@@ -22,7 +22,7 @@ import java.util.List;
 public class Producer extends BaseEntity{
 
     @Column(unique = true)
-    private String name;
+    protected String name;
 
     @OneToMany(mappedBy = "producer")
     @Builder.Default
