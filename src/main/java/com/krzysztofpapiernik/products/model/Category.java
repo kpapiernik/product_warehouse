@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "categories")
 public class Category extends BaseEntity{
     @Column(unique = true)
-    String name;
+    protected String name;
 
     @OneToMany(mappedBy = "category")
     @Builder.Default
