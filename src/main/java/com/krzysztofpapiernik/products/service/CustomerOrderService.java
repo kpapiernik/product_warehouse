@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,19 +30,19 @@ public class CustomerOrderService {
                 .findById(customerId)
                 .orElseThrow(() -> new CustomerOrderServiceException(Map.of("customer", "does not exist")));
 
-        var productId = createCustomerOrderDto.productId();
-        var product = productRepository
-                .findById(productId)
-                .orElseThrow(() -> new CustomerOrderServiceException(Map.of("product", " does not exist")));
+        var productsFromDto = createCustomerOrderDto.products();
+
+        var products = productsFromDto.entrySet()
+                .stream()
+                .collect(Collectors.toMap(entry -> productRepository.findById(entry.getKey())
+                        .orElseThrow(() -> new CustomerOrderServiceException(Map.of("product", " does not exist"))), Map.Entry::getValue));
+
+        products.forEach((key, value) -> stockService.decreaseStockPositionQuantity(key.getId(), value));
 
         var customerOrder = createCustomerOrderDto
                 .toCustomerOrderBeforeDbCheck()
                 .withCustomer(customer)
-                .withProduct(product);
-
-        var quantity = createCustomerOrderDto.quantity();
-
-        stockService.decreaseStockPositionQuantity(productId, quantity);
+                .withProducts(products);
 
         return customerOrderRepository
                 .save(customerOrder)

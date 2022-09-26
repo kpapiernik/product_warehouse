@@ -2,6 +2,7 @@ package com.krzysztofpapiernik.products.model;
 
 import com.krzysztofpapiernik.products.dto.GetPositionFromStockDto;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 
 @Entity
 @Table(name = "stock")
@@ -23,6 +25,7 @@ public class Stock extends BaseEntity{
     public Stock withProduct(Product product){
         return Stock
                 .builder()
+                .id(id)
                 .quantity(quantity)
                 .product(product)
                 .build();
@@ -31,6 +34,7 @@ public class Stock extends BaseEntity{
     public Stock withQuantityAdded(Integer quantity){
         return Stock
                 .builder()
+                .id(id)
                 .quantity(this.quantity + quantity)
                 .product(product)
                 .build();
@@ -39,6 +43,7 @@ public class Stock extends BaseEntity{
     public Stock withQuantitySubtracted(Integer quantity){
         return Stock
                 .builder()
+                .id(id)
                 .quantity(this.quantity - quantity)
                 .product(product)
                 .build();

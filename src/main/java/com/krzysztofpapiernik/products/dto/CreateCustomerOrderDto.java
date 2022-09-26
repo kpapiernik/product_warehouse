@@ -6,9 +6,10 @@ import com.krzysztofpapiernik.products.exception.ValidationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
-public record CreateCustomerOrderDto(Long customerId, Long productId, Integer quantity) {
+public record CreateCustomerOrderDto(Long customerId, Map<Long, Integer> products) {
 
     public CreateCustomerOrderDto {
         var errors = new HashMap<String, String>();
@@ -16,22 +17,32 @@ public record CreateCustomerOrderDto(Long customerId, Long productId, Integer qu
         if(customerId == null){
             errors.put("customerId", "is null");
         }
-        if (productId == null) {
-            errors.put("productId", "is null");
-        }
 
-        Optional<Integer> quantityOptional = Optional.ofNullable(quantity);
+        if(products == null || products.isEmpty()){
+            errors.put("Order items list", "is null or empty");
+        } else {
+            var counter = new Object() {
+                int value = 0;
+            };
+            for(Map.Entry<Long, Integer> orderItem : products.entrySet()){
+                if(orderItem.getKey() == null) {
+                    errors.put("productId [%d]".formatted(counter.value), "is null");
+                }
 
-        if(quantityOptional.isEmpty()) {
-            errors.put("quantity", "is null");
-        }
+                Optional<Integer> quantityOptional = Optional.ofNullable(orderItem.getValue());
 
-        quantityOptional.ifPresent(quantityValue -> {
-            if(quantityValue <= 0){
-                errors.put("quantity", "must be positive number");
+                if(quantityOptional.isEmpty()) {
+                    errors.put("quantity [%d]".formatted(counter.value), "is null");
+                }
+
+                quantityOptional.ifPresent(quantityValue -> {
+                    if(quantityValue <= 0){
+                        errors.put("quantity [%d]".formatted(counter.value), "must be positive number");
+                    }
+                });
+                counter.value++;
             }
-        });
-
+        }
         if(!errors.isEmpty()){
             throw new ValidationException(errors);
         }
@@ -41,7 +52,6 @@ public record CreateCustomerOrderDto(Long customerId, Long productId, Integer qu
     public CustomerOrder toCustomerOrderBeforeDbCheck(){
         return CustomerOrder
                 .builder()
-                .quantity(quantity)
                 .dateTime(LocalDateTime.now().atZone(ZoneId.systemDefault()))
                 .build();
     }
