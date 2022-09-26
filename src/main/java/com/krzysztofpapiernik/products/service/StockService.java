@@ -4,6 +4,7 @@ import com.krzysztofpapiernik.products.dto.CreateStockPositionDto;
 import com.krzysztofpapiernik.products.dto.GetPositionFromStockDto;
 import com.krzysztofpapiernik.products.dto.UpdateStockPositionDto;
 import com.krzysztofpapiernik.products.exception.StockServiceException;
+import com.krzysztofpapiernik.products.model.Stock;
 import com.krzysztofpapiernik.products.repository.ProductRepository;
 import com.krzysztofpapiernik.products.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
@@ -52,22 +53,27 @@ public class StockService {
 
     public GetPositionFromStockDto decreaseStockPositionQuantity(Long productId, Integer quantity){
 
-        if(productRepository.findById(productId).isEmpty()){
-            throw new StockServiceException(Map.of("product", "does not exist"));
-        }
+//        if(productRepository.findById(productId).isEmpty()){
+//            throw new StockServiceException(Map.of("product", "does not exist"));
+//        }
+        var productOptional = productRepository.findById(productId);
 
         var stock = stockRepository
                 .findByProductId(productId)
                 .orElseThrow(() -> new StockServiceException(Map.of("product", "doesnot exist")));
 
-        if(stock.hasQuantityLessThanDemanded(quantity)){
-            throw new StockServiceException(Map.of("quantity", "product quantity is less than demanded"));
+        if(productOptional.isEmpty()){
+            throw new StockServiceException(Map.of("product", "does not exist"));
+        }
+        if (stock.hasQuantityLessThanDemanded(quantity)) {
+                throw new StockServiceException(Map.of("quantity", "product quantity is less than demanded"));
         }
 
-        return stockRepository
-                .save(stock
-                        .withQuantitySubtracted(quantity))
-                .toGetPositionFromStockDto();
+        var updatedQuantity = stock.getQuantity() - quantity;
+
+        stockRepository.updateStockQuantity(productOptional.get(), updatedQuantity);
+
+        return stock.withQuantitySubtracted(quantity).toGetPositionFromStockDto();
     }
 
     public GetPositionFromStockDto getPositionFromStock(Long productId){
