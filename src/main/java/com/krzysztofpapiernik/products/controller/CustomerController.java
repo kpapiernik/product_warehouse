@@ -13,7 +13,7 @@ import java.util.List;
 
 @Log4j2
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
