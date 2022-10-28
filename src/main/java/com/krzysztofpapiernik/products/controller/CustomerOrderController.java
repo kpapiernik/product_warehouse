@@ -3,6 +3,7 @@ package com.krzysztofpapiernik.products.controller;
 import com.krzysztofpapiernik.products.controller.dto.ResponseDataDto;
 import com.krzysztofpapiernik.products.dto.CreateCustomerOrderDto;
 import com.krzysztofpapiernik.products.dto.GetCustomerOrderDto;
+import com.krzysztofpapiernik.products.dto.UpdateOrderStatusDto;
 import com.krzysztofpapiernik.products.service.CustomerOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,5 +25,10 @@ public class CustomerOrderController {
     @GetMapping("/{orderId}")
     public ResponseDataDto<GetCustomerOrderDto> getOrder(@PathVariable("orderId") Long id){
         return new ResponseDataDto<>(customerOrderService.getOrder(id));
+    }
+
+    @PutMapping
+    public ResponseDataDto<GetCustomerOrderDto> changeOrderStatus(@RequestBody UpdateOrderStatusDto dto){
+        return new ResponseDataDto<>(customerOrderService.changeOrderStatus(dto.orderId(), dto.status()));
     }
 }

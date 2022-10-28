@@ -21,15 +21,11 @@ import java.util.stream.Collectors;
 @Table(name = "customer_orders")
 public class CustomerOrder extends BaseEntity{
     @Column(name = "created_at")
-    private ZonedDateTime dateTime;
+    private ZonedDateTime createdAt;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "customer_id")
     protected Customer customer;
-
-//    @ManyToOne(cascade = CascadeType.PERSIST)
-//    @JoinColumn(name = "product_id")
-//    private Product product;
 
     @ElementCollection
     @CollectionTable(name = "order_items")
@@ -38,11 +34,14 @@ public class CustomerOrder extends BaseEntity{
     @Builder.Default
     protected Map<Product, Integer> products = new HashMap<>();
 
+    @Enumerated(EnumType.STRING)
+    protected OrderStatus status;
+
     public CustomerOrder withCustomer(Customer customer){
         return CustomerOrder
                 .builder()
                 .id(id)
-                .dateTime(dateTime)
+                .createdAt(createdAt)
                 .products(products)
                 .customer(customer)
                 .build();
@@ -52,15 +51,26 @@ public class CustomerOrder extends BaseEntity{
         return CustomerOrder
                 .builder()
                 .id(id)
-                .dateTime(dateTime)
+                .createdAt(createdAt)
                 .products(products)
                 .customer(customer)
                 .build();
     }
 
+    public CustomerOrder withChangedStatus(OrderStatus status){
+        return CustomerOrder
+                .builder()
+                .id(id)
+                .createdAt(createdAt)
+                .products(products)
+                .customer(customer)
+                .status(status)
+                .build();
+    }
+
     public GetCustomerOrderDto toGetCustomerOrderDto(){
         var productsIdWithQuantity = products.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey().id, Map.Entry::getValue));
-        return new GetCustomerOrderDto(id, dateTime, productsIdWithQuantity, getTotalPrice());
+        return new GetCustomerOrderDto(id, createdAt, productsIdWithQuantity, getTotalPrice(), status);
     }
 
     private BigDecimal getTotalPrice(){

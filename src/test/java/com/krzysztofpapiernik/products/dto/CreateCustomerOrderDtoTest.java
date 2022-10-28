@@ -4,6 +4,7 @@ import com.krzysztofpapiernik.products.exception.ValidationException;
 import com.krzysztofpapiernik.products.model.CustomerOrder;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,23 +35,29 @@ class CreateCustomerOrderDtoTest {
 
     @Test
     void itShouldNotCreateDtoWhenProductIdIsNull() {
-        assertThatThrownBy(() -> new CreateCustomerOrderDto(1L, Map.of(null, 10)))
+        Map<Long, Integer> orderItems = new HashMap<>();
+        orderItems.put(null, 10);
+
+        assertThatThrownBy(() -> new CreateCustomerOrderDto(1L, orderItems))
                 .isInstanceOf(ValidationException.class)
-                .hasFieldOrPropertyWithValue("errors", Map.of("productId", "is null"));
+                .hasFieldOrPropertyWithValue("errors", Map.of("productId [0]", "is null"));
     }
 
     @Test
     void itShouldNotCreateDtoWhenQuantityIsNull() {
-        assertThatThrownBy(() -> new CreateCustomerOrderDto(1L, Map.of(1L, null)))
+        Map<Long, Integer> orderItems = new HashMap<>();
+        orderItems.put(1L, null);
+
+        assertThatThrownBy(() -> new CreateCustomerOrderDto(1L, orderItems))
                 .isInstanceOf(ValidationException.class)
-                .hasFieldOrPropertyWithValue("errors", Map.of("quantity", "is null"));
+                .hasFieldOrPropertyWithValue("errors", Map.of("quantity [0]", "is null"));
     }
 
     @Test
     void itShouldNotCreateDtoWhenQuantityIsNotPositive() {
         assertThatThrownBy(() -> new CreateCustomerOrderDto(1L, Map.of(1L, -2)))
                 .isInstanceOf(ValidationException.class)
-                .hasFieldOrPropertyWithValue("errors", Map.of("quantity", "must be positive number"));
+                .hasFieldOrPropertyWithValue("errors", Map.of("quantity [0]", "must be positive number"));
     }
 
     @Test

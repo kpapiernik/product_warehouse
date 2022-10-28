@@ -4,6 +4,7 @@ import com.krzysztofpapiernik.products.dto.CreateCustomerOrderDto;
 import com.krzysztofpapiernik.products.dto.GetCustomerOrderDto;
 import com.krzysztofpapiernik.products.exception.CustomerOrderServiceException;
 import com.krzysztofpapiernik.products.model.CustomerOrder;
+import com.krzysztofpapiernik.products.model.OrderStatus;
 import com.krzysztofpapiernik.products.repository.CustomerOrderRepository;
 import com.krzysztofpapiernik.products.repository.CustomerRepository;
 import com.krzysztofpapiernik.products.repository.ProductRepository;
@@ -55,5 +56,16 @@ public class CustomerOrderService {
                 .findById(id)
                 .map(CustomerOrder::toGetCustomerOrderDto)
                 .orElseThrow(() -> new CustomerOrderServiceException(Map.of("order", "does not exist")));
+    }
+
+    public GetCustomerOrderDto changeOrderStatus(Long id, OrderStatus status){
+        var changedOrder = customerOrderRepository
+                .findById(id)
+                .map(order -> order.withChangedStatus(status))
+                .orElseThrow(() -> new CustomerOrderServiceException(Map.of("order", "does not exist")));
+
+        return customerOrderRepository
+                .save(changedOrder)
+                .toGetCustomerOrderDto();
     }
 }

@@ -2,6 +2,7 @@ package com.krzysztofpapiernik.products.dto;
 
 import com.krzysztofpapiernik.products.model.CustomerOrder;
 import com.krzysztofpapiernik.products.exception.ValidationException;
+import com.krzysztofpapiernik.products.model.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,10 +22,11 @@ public record CreateCustomerOrderDto(Long customerId, Map<Long, Integer> product
         if(products == null || products.isEmpty()){
             errors.put("Order items list", "is null or empty");
         } else {
+            var mutableMap = new HashMap<>(products);
             var counter = new Object() {
                 int value = 0;
             };
-            for(Map.Entry<Long, Integer> orderItem : products.entrySet()){
+            for(Map.Entry<Long, Integer> orderItem : mutableMap.entrySet()){
                 if(orderItem.getKey() == null) {
                     errors.put("productId [%d]".formatted(counter.value), "is null");
                 }
@@ -52,7 +54,8 @@ public record CreateCustomerOrderDto(Long customerId, Map<Long, Integer> product
     public CustomerOrder toCustomerOrderBeforeDbCheck(){
         return CustomerOrder
                 .builder()
-                .dateTime(LocalDateTime.now().atZone(ZoneId.systemDefault()))
+                .status(OrderStatus.CREATED)
+                .createdAt(LocalDateTime.now().atZone(ZoneId.systemDefault()))
                 .build();
     }
 }
